@@ -1,0 +1,43 @@
+name: Flask Application CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Ejecuta el workflow en cada push a la rama principal
+  pull_request:
+    branches:
+      - main  # También ejecuta en los pull requests hacia la rama principal
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Configura el repositorio
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Configura Python
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    # 3. Instala dependencias
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # 4. Ejecuta pruebas (opcional)
+    - name: Run tests
+      run: |
+        # Aquí puedes agregar pruebas, por ejemplo:
+        echo "No hay pruebas definidas actualmente."
+
+    # 5. Ejecuta el servidor Flask (para pruebas manuales)
+    - name: Run Flask application
+      run: |
+        python main.py &
+        sleep 10  # Da tiempo para que Flask se inicie
+        curl http://127.0.0.1:5000  # Prueba si la app responde en la raíz
